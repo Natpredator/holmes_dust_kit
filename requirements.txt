@@ -1,0 +1,34 @@
+# Core N-body dynamics
+#
+# WINDOWS NOTE: rebound ships prebuilt Windows wheels (pip installs it with
+# no compiler needed), but reboundx does NOT publish Windows wheels on PyPI
+# -- pip always tries to compile it from source there, and the project does
+# not officially support/test native Windows builds. If `pip install
+# reboundx` fails with a Visual C++ / Build Tools error on Windows (even
+# after installing the "Desktop development with C++" workload), do not
+# keep fighting the compiler: install WSL2 + Ubuntu (`wsl --install` in an
+# admin PowerShell), then run this same `pip install -r requirements.txt`
+# inside WSL instead. This is also what REBOUND's own documentation
+# recommends for the C version / full toolchain on Windows.
+rebound>=4.4
+reboundx>=4.4
+
+# Numerics used throughout (particle generation, vector math)
+numpy>=1.26
+
+# Live ephemeris lookups (holmes_dust.ephemeris.HorizonsEphemerisProvider).
+# Not required if you only use EphemerisSource.LEGACY_TABLE (validation
+# runs limited to Sun+comet at the historical epochs in ephemeris.py).
+astroquery>=0.4.7
+
+# Optional, for your own downstream analysis of the exported CSV files
+# (trajectory_full.csv / snapshot_*.csv). Not imported by holmes_dust itself.
+pandas>=2.0
+
+# Optional: OFFLINE planetary ephemeris from a local JPL .bsp file
+# (run_scenario.py --spk de440.bsp). Pure Python, no compiler needed.
+jplephem>=2.21
+
+# Optional: tools/plan_observations.py (hour-by-hour Alt/Az per observatory,
+# same output format as the project's Skyfield scripts).
+skyfield>=1.45
