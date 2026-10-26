@@ -29,6 +29,8 @@ the median difference from the Java positions was 0.006–0.009° on the sky (se
 10. [Project structure](#project-structure)
 11. [Running the test suite](#running-the-test-suite)
 12. [Notes for reviewers](#notes-for-reviewers)
+13. [Authors](#authors)
+14. [License](#license)
 
 ## What it does
 
@@ -455,3 +457,21 @@ set.
   is off by default.
 - Two epochs (`1899-07-04`, `2015-01-26`) are tagged as 17P/Holmes by
   inference from context. The source does not label them explicitly.
+
+## Authors
+
+- **Markku Nissinen** (contact person), Ursa Astronomical Association and Taurus Hill Observatory
+- **Maria Gritsevich** (project leader), Instituto de Astrofísica de Andalucía and Ursa Astronomical Association
+- **Grigorii Razuvaev**
+- **Arsenii Zhuravlev**
+- **Jorma Ryske**, Ursa Astronomical Association
+
+This software accompanies the Zenodo record
+[Recommendations for Observing the Dust Trails from the 1892 and 2007 Outbursts of Comet 17P/Holmes](https://zenodo.org/records/23297613).
+
+## License
+
+Released under the [MIT License](LICENSE). Note that the required
+dependencies [REBOUND](https://github.com/hannorein/rebound) and
+[REBOUNDx](https://github.com/dtamayo/reboundx) are distributed under their
+own licenses.
