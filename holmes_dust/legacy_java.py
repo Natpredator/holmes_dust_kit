@@ -254,6 +254,19 @@ JAVA_2007_REFACTOR_SNAPSHOTS: tuple[LegacySnapshot, ...] = (
     _MATCH_M2, _MATCH_M14,
 )
 
+# SlaveMode_10P.java (10P/Tempel 2): a DIFFERENT set of six forecast dates
+# than the Holmes files above, and only bin b3 (the largest grains) is ever
+# ejected -- only its f10..f15 condition block is live code (the m2/m14 block
+# and an f10..f15-with-different-2026/2027-dates block further down are
+# wrapped in a dead `If (0) { ... }` and never execute). Verified directly
+# against a real 300-particle run (`toinen_10p_300_1873/orekit-results`):
+# b3f10/11/12.csv hold 2010-06-15/07-15/08-15, b3f13/14/15.csv hold
+# 2026-06-15/07-15/08-15, and b3f16..f22/m2/m14.csv are all empty (0 rows).
+JAVA_10P_SNAPSHOTS: tuple[LegacySnapshot, ...] = (
+    _f("f10", 2010, 6, 15), _f("f11", 2010, 7, 15), _f("f12", 2010, 8, 15),
+    _f("f13", 2026, 6, 15), _f("f14", 2026, 7, 15), _f("f15", 2026, 8, 15),
+)
+
 
 # ---------------------------------------------------------------------------
 # Writing (used by run_scenario.py when output_format is LEGACY/BOTH)

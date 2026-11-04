@@ -54,6 +54,7 @@ from .config import (
 from .legacy_java import (
     JAVA_1892_SNAPSHOTS,            # f10..f22 + m2 + m14, as in SlaveMode_Holmes1892_Refactor_1892.java
     JAVA_2007_REFACTOR_SNAPSHOTS,   # f10..f25 + m2 + m14, as in SlaveMode_Holmes1892_Refactor_2007.java
+    JAVA_10P_SNAPSHOTS,              # f10..f15 (2010 + 2026 dates), as in SlaveMode_10P.java
 )
 
 # ---------------------------------------------------------------------------
@@ -195,6 +196,70 @@ PROFILE_HISTORICAL_CANDIDATE_DEFAULT = dict(
 )
 
 
+# PROFILE_10P_* -- Matches SlaveMode_10P.java: comet's own gravity OFF, only
+# the largest grain bin (b3, 0.1-1 mm) is ejected (the b1/b2 code paths are
+# never reached -- the bvalue loop in SlaveMode_10P.java is hard-coded to
+# `for (bvalue = 3; bvalue <= 3; bvalue++)`), up to 400 particles, all
+# planets. beta(radius) and ejection_speed(radius) use the SAME formulas as
+# Holmes (particles.py) -- the per-bin "max ejection speed" constants in the
+# Java file (550/440/50 m/s) only feed the disabled
+# `locked_beta_and_ejection_speed == 0` branch, exactly as for Holmes (see
+# config.py's PARTICLE_BINS docstring), so no 10P-specific speed override is
+# needed here. Each perihelion epoch gets its own profile because the
+# integration length (hard-coded in seconds in the Java file, "X to 2027
+# duration") differs per epoch.
+PROFILE_10P_1873 = dict(
+    # Matches SlaveMode_10P.java with OutburstAndInitialDateIndex = 13.
+    gravitating_planets=ALL_PLANETS,
+    include_comet_self_gravity=False,
+    comet_assumed_gm_m3_s2=None,
+    radiation_model=RadiationModel.REBOUNDX_BETA,
+    bins=_bins("b3_big"),
+    n_particles_per_bin=400,
+    # old `duration = 4853952000.` seconds = exactly 56180 days: 1873-06-25 -> 2027-02-17.
+    duration_days=56180,
+    snapshots=snapshot_specs_from_legacy(JAVA_10P_SNAPSHOTS),
+)
+
+PROFILE_10P_1894 = dict(
+    # Matches SlaveMode_10P.java with OutburstAndInitialDateIndex = 14, WITH
+    # ONE CORRECTION. The Java file's own comment calls its commented-out
+    # constant "1894 to 2027 duration", but 4091894400 s from 1894-04-23 only
+    # reaches 2023-12-23 -- short of 2027, and short of the 2026-06/07/08
+    # snapshot dates in JAVA_10P_SNAPSHOTS that this profile exists to
+    # compare against. That constant was apparently never actually run (no
+    # orekit-results folder for 1894 was supplied, unlike 1873). Rather than
+    # port a duration too short for its own snapshots, this profile instead
+    # runs to the same real-world target date as the 1873 profile (~2027-09),
+    # so f13/f14/f15 are always populated.
+    gravitating_planets=ALL_PLANETS,
+    include_comet_self_gravity=False,
+    comet_assumed_gm_m3_s2=None,
+    radiation_model=RadiationModel.REBOUNDX_BETA,
+    bins=_bins("b3_big"),
+    n_particles_per_bin=400,
+    duration_days=48708,   # 1894-04-23 12:00 -> 2027-09-01 12:00 UTC
+    snapshots=snapshot_specs_from_legacy(JAVA_10P_SNAPSHOTS),
+)
+
+PROFILE_10P_1904 = dict(
+    # Matches SlaveMode_10P.java with OutburstAndInitialDateIndex = 15. Same
+    # provenance caveat as PROFILE_10P_1894: a commented-out, never-actually-run
+    # alternative duration (no orekit-results folder for 1904 was supplied),
+    # and not a whole number of days (3892723200 s / 86400 = 45054.666... d).
+    # UNLIKE 1894 this one does reach past the last snapshot (2028-03-19 is
+    # after 2026-08-15), so it is kept as-is rather than extended.
+    gravitating_planets=ALL_PLANETS,
+    include_comet_self_gravity=False,
+    comet_assumed_gm_m3_s2=None,
+    radiation_model=RadiationModel.REBOUNDX_BETA,
+    bins=_bins("b3_big"),
+    n_particles_per_bin=400,
+    duration_days=3892723200.0 / 86400.0,   # 1904-11-10 12:00 -> 2028-03-19 04:00 UTC
+    snapshots=snapshot_specs_from_legacy(JAVA_10P_SNAPSHOTS),
+)
+
+
 # Name -> profile dict, purely so the command-line entry point
 # (run_scenario.py) can accept a plain string instead of importing every
 # PROFILE_* constant individually.
@@ -203,6 +268,9 @@ PROFILES: dict[str, dict] = {
     "2007_all_planets_extended": PROFILE_2007_ALL_PLANETS_EXTENDED,
     "1892_no_comet_gravity": PROFILE_1892_NO_COMET_GRAVITY,
     "historical_candidate_default": PROFILE_HISTORICAL_CANDIDATE_DEFAULT,
+    "10p_1873": PROFILE_10P_1873,
+    "10p_1894": PROFILE_10P_1894,
+    "10p_1904": PROFILE_10P_1904,
 }
 
 

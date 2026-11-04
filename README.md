@@ -329,6 +329,23 @@ in the Java programs:
 | `2007_all_planets_extended` | `…Refactor_2007.java` | Mercury–Neptune | on | b1, b2, b3 | 3 × 500 | 9131 d | f10–f25, m2, m14 |
 | `1892_no_comet_gravity` | `…Refactor_1892.java` | Mercury–Neptune | off | b1 | 400 | 50140 d | f10–f22, m2, m14 |
 | `historical_candidate_default` | `…Refactor.java` | Mercury–Neptune | off | b1, b2, b3 | 3 × 200 | 48910 d | f10–f22, m2, m14 |
+| `10p_1873` | `SlaveMode_10P.java` (index 13) | Mercury–Neptune | off | b3 only | 400 | 56180 d | f10–f15 |
+| `10p_1894` | `SlaveMode_10P.java` (index 14) | Mercury–Neptune | off | b3 only | 400 | 48708 d\* | f10–f15 |
+| `10p_1904` | `SlaveMode_10P.java` (index 15) | Mercury–Neptune | off | b3 only | 400 | 45055 d | f10–f15 |
+
+\* The Java file's own commented-out duration constant for 1894 ("1894 to
+2027 duration") actually only reaches 2023-12-23 -- short of its own f13–f15
+snapshot dates (2026-06/07/08-15) -- and no orekit-results folder for 1894
+was supplied, so it was apparently never run. `10p_1894` instead runs to
+2027-09-01, long enough to populate every snapshot. `10p_1904`'s constant is
+kept as-is: short of "2027" too, but still well past the last snapshot.
+
+10P/Tempel 2's `f10`–`f15` forecast dates differ from the Holmes profiles
+above: 2010-06-15, 2010-07-15, 2010-08-15, 2026-06-15, 2026-07-15,
+2026-08-15 (`holmes_dust/legacy_java.py: JAVA_10P_SNAPSHOTS`), verified
+against a real 300-particle Java run. 10P only ever ejects the largest grain
+bin (b3, 0.1–1 mm) -- `SlaveMode_10P.java`'s particle loop is hard-coded to
+`bvalue == 3` only.
 
 Size bins (particle radius): b1 = 0.001–0.01 mm, b2 = 0.01–0.1 mm,
 b3 = 0.1–1 mm.
